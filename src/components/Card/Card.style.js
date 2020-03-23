@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { breakpoints } from '../Layout'
 
 export const Body = styled.div`
-  width: 310px;
   padding: 24px 24px 0px 24px;
   margin-bottom: 48px;
   box-sizing: border-box;
