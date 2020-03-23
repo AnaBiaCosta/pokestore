@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Body, 
   Title, 
@@ -9,25 +9,67 @@ import {
   Button
 } from './Card.style'
 
-const Card = () => {
+const Card = ({ name, src, type, price }) => {
+  const [newPrice, setNewPrice] = useState(0)
+  const [newCapture, setNewCapture] = useState(0)
+  const [newGeneration, setNewGeneration] = useState(null)
+
+  useEffect(() => {
+    if(price <= 100){
+      setNewPrice(10)
+    }else if(price > 100 && price <= 200){
+      setNewPrice(20)
+    }else{
+      setNewPrice(50)
+    }
+
+    fetch(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
+    .then((res) => {
+      return res.json()
+    }).then((res) => {
+      setNewCapture(res.capture_rate)
+      setNewGeneration(res.generation.name)
+    })
+  }, [])
+
+  const transformGeneration = (gen) => {
+    return gen.replace(/\w+-i/, "Primeira geração")
+  }
+
+  const renderGeneration = () => {
+    if(newGeneration){
+      return (
+        <Info>
+          <InfoBold>geração:</InfoBold> {transformGeneration(newGeneration)}
+        </Info>
+      )
+    }
+  }
+
   return (
     <Body>
-      <Title>pokemon</Title>
+      <Title>{name}</Title>
       <InfoContainer>
         <div>
           <Info>
-            <InfoBold>tipo: </InfoBold> undefined
+            <InfoBold>tipo: </InfoBold>
+            {type && type.map((elm) => {
+              const { type } = elm
+              return (
+                <span key={type.name}>{type.name}</span>
+              )
+            })}
           </Info>
+
+          {renderGeneration()}
+
           <Info>
-            <InfoBold>tipo: </InfoBold> undefined
-          </Info>
-          <Info>
-            <InfoBold>tipo: </InfoBold> undefined
+            <InfoBold>taxa de captura:</InfoBold> {newCapture}
           </Info>
         </div>
-        <Avatar />
+        <Avatar src={src} />
       </InfoContainer>
-      <Button>P$ 200</Button>
+      <Button>P$ {newPrice}</Button>
     </Body>
   )
 }

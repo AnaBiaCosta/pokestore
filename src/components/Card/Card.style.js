@@ -45,4 +45,5 @@ export const Button = styled.button`
   top: 26px;
   font-size: 24px;
   font-weight: 900;
+  cursor: pointer;
 `
